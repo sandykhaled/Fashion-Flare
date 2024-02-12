@@ -28,6 +28,8 @@ return new class extends Migration
             $table->decimal('hips')->nullable();
             $table->decimal('thigh')->nullable();
             $table->decimal('inseam')->nullable();
+            $table->string('style')->nullable();
+            $table->string('fav_brand')->nullable();
             $table->primary('user_id');
             $table->timestamps();
         });

@@ -37,6 +37,10 @@ class ProfileRequest extends FormRequest
                'hips' => ['nullable', 'numeric', 'between:0.01,99999.99'],
                'thigh' => ['nullable', 'numeric', 'between:0.01,99999.99'],
                'inseam' => ['nullable', 'numeric', 'between:0.01,99999.99'],
+               'style'=>['required','string'],
+               'fav_brand'=>['required','string']
+
+
 
 
            ];
