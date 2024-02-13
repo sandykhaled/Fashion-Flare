@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 
 class ApiFormRequest extends FormRequest
 {
-
+use ResponseTrait;
     /**
      * Handle a failed validation attempt.
      *
