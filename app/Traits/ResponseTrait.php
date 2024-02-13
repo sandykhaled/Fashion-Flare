@@ -1,6 +1,6 @@
 <?php
 
-namespace App\traits;
+namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
 
@@ -14,7 +14,7 @@ trait ResponseTrait
      *
      * @return JsonResponse
      */
-    public static function responseSuccess($data, $message = "Successful"): JsonResponse
+    public function responseSuccess($data, $message = "Successful"): JsonResponse
     {
         return response()->json([
             'status' => true,
@@ -32,7 +32,7 @@ trait ResponseTrait
      *
      * @return JsonResponse
      */
-    public static function responseError($errors, $message = "Something went wrong."): JsonResponse
+    public function responseError($errors, $message = "Something went wrong."): JsonResponse
     {
         return response()->json([
             'status' => false,

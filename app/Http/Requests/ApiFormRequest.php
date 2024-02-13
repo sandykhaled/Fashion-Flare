@@ -10,7 +10,6 @@ use Illuminate\Validation\ValidationException;
 
 class ApiFormRequest extends FormRequest
 {
-    use ResponseTrait;
 
     /**
      * Handle a failed validation attempt.
@@ -23,7 +22,7 @@ class ApiFormRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
-            ResponseTrait::responseError((new ValidationException($validator))->errors())
+            $this->responseError((new ValidationException($validator))->errors())
         );
     }
 }
