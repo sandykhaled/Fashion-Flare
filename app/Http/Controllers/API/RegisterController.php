@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
-    use ResponseTrait;
 
     public function __construct(private AuthRepository $auth)
     {
@@ -23,9 +22,18 @@ class RegisterController extends Controller
         try {
             $data = $this->auth->register($request->all());
 
-            return $this->responseSuccess($data, 'User registered successfully.');
+            return response()->json([
+                'status' => true,
+                'message' => 'User registered successfully.',
+                'data' => $data,
+                'errors' => null
+            ]);
         } catch (Exception $exception) {
-            return $this->responseError([], $exception->getMessage());
+            return response()->json([
+                'status' => false,
+                'message' => $exception->getMessage(),
+                'data' => null,
+            ]);
         }
     }
 }

@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
-{use ResponseTrait;
+{
 
     public function __construct(private AuthRepository $auth)
     {
@@ -23,19 +23,31 @@ class ProfileController extends Controller
            return  Auth::guard()->user();
 
         } catch (Exception $exception) {
-            return $this->responseError([], $exception->getMessage());
-        }
+            return response()->json([
+                'status' => false,
+                'message' => $exception->getMessage(),
+                'data' => null,
+            ]);        }
     }
     public function logout(): JsonResponse
     {
         try {
             Auth::guard()->user()->token()->revoke();
             Auth::guard()->user()->token()->delete();
-            return $this->responseSuccess('', 'User Logged Out Successfully!');
+            return response()->json([
+                'status' => true,
+                'message' => 'User Logged Out Successfully!.',
+                'data' => '',
+                'errors' => null
+            ]);
 
 
         } catch (Exception $exception) {
-            return $this->responseError([], $exception->getMessage());
+            return response()->json([
+                'status' => false,
+                'message' => $exception->getMessage(),
+                'data' => null,
+            ]);
         }
     }
     public function update(ProfileRequest $request)
@@ -44,10 +56,18 @@ class ProfileController extends Controller
             $user = Auth::guard()->user();
 
             $user->profile->fill($request->all())->save();
+            return response()->json([
+                'status' => true,
+                'message' => 'User Profile updated successfully.',
+                'data' => '',
+                'errors' => null
+            ]);
 
-            return $this->responseSuccess($request, 'User Profile updated successfully.');
         } catch (\Exception $exception) {
-            return $this->responseError([], $exception->getMessage());
-        }
+            return response()->json([
+                'status' => false,
+                'message' => $exception->getMessage(),
+                'data' => null,
+            ]);        }
     }
 }
