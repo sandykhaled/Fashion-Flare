@@ -23,8 +23,7 @@ class ApiFormRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(
-//            $this->responseError((new ValidationException($validator))->errors())
-             response()->json((new ValidationException($validator))->errors())
+            ResponseTrait::responseError((new ValidationException($validator))->errors())
         );
     }
 }
