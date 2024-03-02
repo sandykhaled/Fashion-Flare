@@ -59,7 +59,7 @@ class ProfileController extends Controller
             $project = $request->except('user_img');
             if ($request->hasFile('user_img')) {
                 $photoName = MediaTrait::upload($request->file('user_img'), 'profiles');
-                $photoNamePath = asset('/profiles/' . $photoName);
+                $photoNamePath = asset('/uploads/' . $photoName);
                 $project['user_img'] = $photoNamePath;
             }
             $data = $user->profile->fill($project)->save();
