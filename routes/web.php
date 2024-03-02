@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\UserImgController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('imgs/delete/{id}',[UserImgController::class,'destroy']);
+Route::get('imgs/store',[UserImgController::class,'upload']);
+

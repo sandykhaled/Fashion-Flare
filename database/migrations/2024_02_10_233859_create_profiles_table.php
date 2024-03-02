@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('style')->nullable();
             $table->string('fav_brand')->nullable();
             $table->primary('user_id');
+            $table->string('user_img')->nullable();
             $table->timestamps();
         });
     }

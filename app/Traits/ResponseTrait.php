@@ -14,7 +14,7 @@ trait ResponseTrait
      *
      * @return JsonResponse
      */
-    public function responseSuccess($data, $message = "Successful"): JsonResponse
+    public static function responseSuccess($data, $message = "Successful"): JsonResponse
     {
         return response()->json([
             'status' => true,
@@ -32,7 +32,7 @@ trait ResponseTrait
      *
      * @return JsonResponse
      */
-    public function responseError($errors, $message = "Something went wrong."): JsonResponse
+    public static function responseError($errors, $message = "Something went wrong."): JsonResponse
     {
         return response()->json([
             'status' => false,

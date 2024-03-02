@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileRequest;
 use App\Repositories\AuthRepository;
+use App\Traits\MediaTrait;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -54,20 +55,17 @@ class ProfileController extends Controller
     {
         try {
             $user = Auth::guard()->user();
-
-            $user->profile->fill($request->all())->save();
-            return response()->json([
-                'status' => true,
-                'message' => 'User Profile updated successfully.',
-                'data' => '',
-                'errors' => null
-            ]);
-
-        } catch (\Exception $exception) {
-            return response()->json([
-                'status' => false,
-                'message' => $exception->getMessage(),
-                'data' => null,
-            ]);        }
+            $request->validated();
+            $project = $request->except('user_img');
+            if ($request->hasFile('user_img')) {
+                $photoName = MediaTrait::upload($request->file('user_img'), 'profiles');
+                $photoNamePath = asset('/profiles/' . $photoName);
+                $project['user_img'] = $photoNamePath;
+            }
+            $data = $user->profile->fill($project)->save();
+            return ResponseTrait::responseSuccess($data);
+        } catch (Exception $exception) {
+            return ResponseTrait::responseError($exception);
+        }
     }
 }
