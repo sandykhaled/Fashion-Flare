@@ -1,16 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClothesRequest;
-use App\Models\User;
 use App\Models\UserImg;
 use App\Traits\MediaTrait;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class UserImgController extends Controller
 {

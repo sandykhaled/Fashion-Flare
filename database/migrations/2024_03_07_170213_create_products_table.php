@@ -11,13 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->string('logo')->nullable();
-            $table->enum('status',['active','archived']);
+            $table->float('price')->default(0);
+            $table->float('compare_price')->nullable();
+            $table->json('options')->nullable();
+            $table->float('rating')->default(0);
+            $table->boolean('featured')->default(0);
+            $table->enum('status',['active','draft','archived'])->default('active');
             $table->timestamps();
         });
     }
@@ -27,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('products');
     }
 };

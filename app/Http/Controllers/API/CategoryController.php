@@ -5,7 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use App\Models\Product;
+use App\Traits\MediaTrait;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Traits\ResponseTrait;
@@ -18,22 +22,32 @@ class CategoryController extends Controller
      */
     public function index()
     {
-
+        try {
+            $categories = Category::all();
+            return ResponseTrait::responseSuccess($categories);
+        } catch (Exception $exception) {
+            return ResponseTrait::responseError($exception);
+        }
     }
-
     public function store(CategoryRequest $request)
     {
         try {
             $request->merge([
-                'slug' => Str::slug($request->post('name'))
+                'slug' => Str::slug($request->post('name')),
             ]);
-            $data = $request->except('image');
-            $data['image'] = $this->uploadFile($request);
+            $data = $request->all();
+
+            if ($request->hasFile('logo')) {
+                $photoName = MediaTrait::upload($request->file('logo'), 'logos');
+                $photoNamePath = asset('/uploads/' . $photoName);
+                $data['logo'] = $photoNamePath;
+            }
+
+
             Category::create($data);
-            return $this->responseSuccess([], 'Category added successfully');
-        }
-        catch (\Exception $exception){
-            return $this->responseError([],$exception->getMessage());
+            return ResponseTrait::responseSuccess($data,'Category added successfully');
+        } catch (Exception $exception) {
+            return ResponseTrait::responseError($exception,'Error! Try To add Category again');
         }
     }
 
@@ -42,74 +56,46 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        try{
+        $products = Product::with('category')->where('category_id','=',$category->id)->get();
+        return ResponseTrait::responseSuccess($products);
+        }
+        catch (Exception $exception) {
+        return ResponseTrait::responseError($exception,'Error! Try again');
+}
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request,$id)
     {
         try {
-            // Check if the category exists
             $category = Category::find($id);
-
             if (!$category) {
-                return $this->responseError([], 'Category not found.');
+                return ResponseTrait::responseError(null, 'Category not found');
             }
 
-            $old_image = $category->image;
-
-            $data = $request->except('image');
-
-            // Update the 'slug' if the 'name' is being updated
+            if ($request->hasFile('logo')) {
+                $photoName = MediaTrait::upload($request->file('logo'), 'logos');
+                $photoNamePath = asset('/uploads/' . $photoName);
+                $category->logo = $photoNamePath;
+            }
             if ($request->has('name') && $request->input('name') !== $category->name) {
-                $data['slug'] = Str::slug($request->input('name'));
+                $category->slug = Str::slug($request->input('name'));
             }
+            // Update other fields
+            $category->update($request->except('logo'));
 
-            // Upload the new image and update the 'image' field in $data
-            $new_image = $this->uploadFile($request);
-
-            if ($new_image) {
-                $data['image'] = $new_image;
-            }
-
-            $category->update($data);
-
-            if ($new_image && $old_image) {
-                $this->deleteFile($old_image);
-            }
-
-            return $this->responseSuccess([], 'Category updated successfully');
-        } catch (\Exception $exception) {
-            return $this->responseError([], $exception->getMessage());
+            return ResponseTrait::responseSuccess($category, 'Category updated successfully');
+        } catch (Exception $exception) {
+            return ResponseTrait::responseError($exception, 'Error! Try to update Category');
         }
 
-
-}
+    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        try {
-            $category=Category::findOrFail($id);
-            $category->delete();
-            if($category->image){
-                Storage::disk('public')->delete($category->image);
-            }
-            return $this->responseSuccess([], 'Category deleted successfully');
-        } catch (\Exception $exception) {
-            return $this->responseError([], $exception->getMessage());
-        }
-
-    }
-    protected function uploadFile(Request $request){
-        if(! $request->hasFile('image')){
-            return;
-        }
-
-        $file = $request->file('image');
-        $path=$file->store('uploads',['disk'=>'public']);
-        return $path;
-
+        //
     }
 }

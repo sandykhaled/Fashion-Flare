@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Repositories\AuthRepository;
-use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
 

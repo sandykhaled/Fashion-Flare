@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class CategoryRequest extends FormRequest
+class ProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +26,9 @@ class CategoryRequest extends FormRequest
                 ,'string',
                 'min:3',
                 'max:255',
-                'unique:categories,name'],
-            'logo'=>
-                'image|mimes:jpeg,jpg,png,gif',
-            'status'=>'required|in:active,archived'
-
+                'unique:products,name'],
+            'status'=>'required|in:active,archived',
+            'price'=>'required|numeric'
         ];
     }
 }

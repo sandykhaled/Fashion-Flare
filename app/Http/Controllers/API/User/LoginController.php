@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
 use App\Repositories\AuthRepository;
 use App\Traits\ResponseTrait;
-use Exception;
 
 class LoginController extends Controller
 {

@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 class Category extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','slug','description','image','status'];
+    protected $fillable = ['name','slug','description','logo','status'];
 
     public static function rules($id = null)
     {
@@ -18,8 +18,12 @@ class Category extends Model
         return [
             'name' => 'required|unique:categories,name' . $uniqueRule,
             'description' => 'nullable|string',
-            'image'=>
+            'logo'=>
                 [ 'image' , 'max:1048576' , 'dimensions:min_width=100,min_height=200' ],
             'status'=>'required|in:active,archived'        ];
+    }
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }
