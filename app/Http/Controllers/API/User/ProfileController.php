@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\Auth\ProfileRequest;
 use App\Repositories\AuthRepository;
 use App\Traits\MediaTrait;
 use App\Traits\ResponseTrait;
@@ -21,8 +21,12 @@ class ProfileController extends Controller
     public function show()
     {
         try {
-           return  Auth::guard()->user();
+            $user = Auth::user();
 
+            if ($user) {
+                $user->load('profile');
+            }
+            return  $user;
         } catch (Exception $exception) {
             return response()->json([
                 'status' => false,

@@ -23,7 +23,7 @@ class CategoryController extends Controller
     public function index()
     {
         try {
-            $categories = Category::all();
+            $categories = Category::with('products')->get();
             return ResponseTrait::responseSuccess($categories);
         } catch (Exception $exception) {
             return ResponseTrait::responseError($exception);

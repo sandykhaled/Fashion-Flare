@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\API\User;
+namespace App\Http\Controllers\API\User\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Repositories\AuthRepository;
 use Exception;
 use Illuminate\Http\JsonResponse;
