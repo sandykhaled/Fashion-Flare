@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Notifications\EmailVerificationNotification;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Hash;
@@ -31,6 +32,7 @@ class AuthRepository
     public function register(array $data): array
     {
         $user = User::create($this->prepareDataForRegister($data));
+        $user->notify(new EmailVerificationNotification());
 
         if (!$user) {
             throw new Exception("Sorry, user does not registered, Please try again.", 500);

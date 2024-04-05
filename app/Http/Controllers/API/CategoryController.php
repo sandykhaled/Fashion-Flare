@@ -58,6 +58,10 @@ class CategoryController extends Controller
     {
         try{
         $products = Product::with('category')->where('category_id','=',$category->id)->get();
+//            $products = Product::join('categories', 'products.category_id', '=', 'categories.id')
+//                ->select('products.*')
+//                ->where('categories.id', '=', $category->id)
+//                ->get();
         return ResponseTrait::responseSuccess($products);
         }
         catch (Exception $exception) {
