@@ -4,12 +4,14 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ProfileRequest;
+use App\Models\Style;
 use App\Repositories\AuthRepository;
 use App\Traits\MediaTrait;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
@@ -24,15 +26,28 @@ class ProfileController extends Controller
             $user = Auth::user();
 
             if ($user) {
-                $user->load('profile');
+                $user->load(['profile']);
+
+                $styleNames = $user->styles()->pluck('name');
+
+                $user->styles = $styleNames->toArray();
             }
-            return  $user;
+
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User data retrieved successfully',
+                'data' => [
+                    'user' => $user,
+                ],
+            ]);
         } catch (Exception $exception) {
             return response()->json([
                 'status' => false,
                 'message' => $exception->getMessage(),
                 'data' => null,
-            ]);        }
+            ]);
+        }
     }
     public function logout(): JsonResponse
     {
@@ -68,6 +83,23 @@ class ProfileController extends Controller
             }
             $data = $user->profile->fill($project)->save();
             return ResponseTrait::responseSuccess($data);
+        } catch (Exception $exception) {
+            return ResponseTrait::responseError($exception);
+        }
+    }
+    public function create_style(Request $request)
+    {
+        try {
+            $user = Auth::guard()->user();
+
+            $styleData = $request->all();
+
+            $style = Style::create($styleData);
+
+            $user->styles()->attach($style->id);
+
+            return ResponseTrait::responseSuccess($style,'Style created successfully for the user');
+
         } catch (Exception $exception) {
             return ResponseTrait::responseError($exception);
         }

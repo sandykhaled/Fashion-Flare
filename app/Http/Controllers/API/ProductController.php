@@ -4,12 +4,15 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
+use App\Models\Color;
 use App\Models\Image;
 use App\Models\Product;
+use App\Models\Style;
 use App\Traits\MediaTrait;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -60,7 +63,12 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
-        $product =  Product::with('images')->find($id);
+            $product =  Product::find($id);
+            $images = $product->images()->pluck('image');
+            $product->images = $images->toArray();
+
+            $colors = $product->colors()->pluck('name');
+            $product->colors = $colors->toArray();
             return ResponseTrait::responseSuccess($product);
         }
         catch (\Exception $exception){
@@ -120,6 +128,7 @@ class ProductController extends Controller
 
 
                 $product->images()->delete();
+                $product->delete();
             return ResponseTrait::responseSuccess($product,'Product deleted successfully');
         }
         catch (\Exception $exception){
@@ -127,6 +136,22 @@ class ProductController extends Controller
 
         }
 
+    }
+    public function add_color(Request $request,$id)
+    {
+        try {
+            $product = Product::find($id);
+            $colorData = $request->all();
+
+            $color = Color::create($colorData);
+
+            $product->colors()->attach($color->id);
+
+            return ResponseTrait::responseSuccess($color,'Color created successfully for the Product');
+
+        } catch (Exception $exception) {
+            return ResponseTrait::responseError($exception);
+        }
     }
 
 }

@@ -48,4 +48,8 @@ class User extends Authenticatable
     public function imgs(){
         return $this->hasMany(UserImg::class,'user_id','id')->withDefault();
     }
+    public function styles()
+    {
+        return $this->belongsToMany(Style::class)->withPivot([]);
+    }
 }

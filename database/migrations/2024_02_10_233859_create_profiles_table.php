@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('profiles', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('full_name');
             $table->string('nickname')->unique();
@@ -28,9 +29,7 @@ return new class extends Migration
             $table->decimal('hips')->nullable();
             $table->decimal('thigh')->nullable();
             $table->decimal('inseam')->nullable();
-            $table->string('style')->nullable();
             $table->string('fav_brand')->nullable();
-            $table->primary('user_id');
             $table->string('user_img')->nullable();
             $table->timestamps();
         });

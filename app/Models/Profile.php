@@ -12,7 +12,7 @@ class Profile extends Model
     protected $fillable = ['user_id','full_name','nickname',
         'phone_number','age','gender','country',
         'address','height','width','shoulder',
-        'chest','waist','hips','thigh','inseam','style','fav_brand','user_img'];
+        'chest','waist','hips','thigh','inseam','fav_brand','user_img'];
     public function user()
     {
         return $this->belongsTo(User::class);

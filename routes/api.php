@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::resource('categories',\App\Http\Controllers\API\CategoryController::class)->except('create','edit');
 Route::resource('products',\App\Http\Controllers\API\ProductController::class);
+Route::post('products/colors/{id}',[\App\Http\Controllers\API\ProductController::class,'add_color']);
+
 //Route::resource('images',\App\Http\Controllers\API\ImageController::class);
 Route::post('images/{product}',[\App\Http\Controllers\API\ImageController::class,'store']);
 Route::delete('images/{image}',[\App\Http\Controllers\API\ImageController::class,'destroy']);
@@ -37,6 +39,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('profile/show',[ProfileController::class,'show']);
     Route::post('logout',[ProfileController::class,'logout']);
     Route::post('profile/update',[ProfileController::class,'update']);
+    Route::post('profile/style',[ProfileController::class,'create_style']);
     Route::post('imgs/upload',[UserImgController::class,'upload']);
     Route::delete('imgs/delete/{id}',[UserImgController::class,'destroy']);
     Route::post('email_verification',[\App\Http\Controllers\API\User\Auth\EmailVerificationController::class,'email_verification']);
