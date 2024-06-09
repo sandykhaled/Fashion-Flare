@@ -22,7 +22,8 @@ class ProfileRequest extends FormRequest
     public function rules(): array
     {
            return[
-               'full_name' => ['required', 'string', 'min:6', 'max:255'],
+               'first_name' => ['required', 'string', 'min:3', 'max:255'],
+               'last_name' => ['required', 'string', 'min:3', 'max:255'],
                'nickname' => ['required', 'string', 'max:255'],
                'phone_number' => ['required', 'numeric', 'digits:13'],
                'age' => ['required', 'numeric', 'integer', 'min:1', 'max:150'],

@@ -32,7 +32,7 @@ class AuthRepository
     public function register(array $data): array
     {
         $user = User::create($this->prepareDataForRegister($data));
-        $user->notify(new EmailVerificationNotification());
+//        $user->notify(new EmailVerificationNotification());
 
         if (!$user) {
             throw new Exception("Sorry, user does not registered, Please try again.", 500);
@@ -50,7 +50,8 @@ class AuthRepository
         $profile = $user->profile;
 
         $profile->update([
-            'full_name' => $data['full_name'],
+            'first_name' => $data['first_name'],
+            'last_name' => $data['last_name'],
             'nickname' => $data['nickname'],
             'phone_number' => $data['phone_number'],
             'age' => $data['age'],
